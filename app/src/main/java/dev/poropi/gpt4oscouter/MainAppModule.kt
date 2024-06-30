@@ -20,13 +20,22 @@ import java.util.concurrent.TimeUnit
 
 /**
  * MainAppModule
- * Module for providing dependencies
- * @see Module
- * @see InstallIn
+ *
+ * このモジュールは、アプリケーション全体で使用する依存関係を提供します。
+ * Hiltのアノテーションが付けられており、依存関係の注入を行います。
  */
 @InstallIn(SingletonComponent::class)
 @Module
 class MainAppModule {
+
+    /**
+     * OkHttpClientの提供
+     *
+     * この関数は、アプリケーション全体で使用するOkHttpClientを提供します。
+     * ネットワークインターセプター、HTTPログインターセプター、タイムアウト設定が含まれています。
+     *
+     * @return OkHttpClientのインスタンス。
+     */
     @Provides
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
@@ -47,6 +56,15 @@ class MainAppModule {
             .build()
     }
 
+    /**
+     * OpenAiServiceの提供
+     *
+     * この関数は、アプリケーション全体で使用するOpenAiServiceを提供します。
+     * Retrofitを使用してAPIクライアントを作成します。
+     *
+     * @param okHttpClient OkHttpClientのインスタンス。
+     * @return OpenAiServiceのインスタンス。
+     */
     @Provides
     fun provideApiClient(okHttpClient: OkHttpClient): OpenAiService {
         val moshi = Moshi.Builder()
@@ -61,11 +79,27 @@ class MainAppModule {
             .create(OpenAiService::class.java)
     }
 
+    /**
+     * OpenAiRepositoryの提供
+     *
+     * この関数は、アプリケーション全体で使用するOpenAiRepositoryを提供します。
+     *
+     * @param openAiService OpenAiServiceのインスタンス。
+     * @return OpenAiRepositoryのインスタンス。
+     */
     @Provides
     fun provideApiOpenAiRepository(openAiService: OpenAiService): OpenAiRepository {
         return OpenAiRepositoryImpl(openAiService)
     }
 
+    /**
+     * HttpLoggingInterceptorの作成
+     *
+     * この関数は、HTTPログインターセプターを作成します。
+     * デバッグビルド時には、ログレベルをBODYに設定します。
+     *
+     * @return HttpLoggingInterceptorのインスタンス。
+     */
     private fun createHttpLoggingInterceptor(): HttpLoggingInterceptor {
         val logging = HttpLoggingInterceptor { message -> Timber.d("Retrofit: %s", message) }
         logging.level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE

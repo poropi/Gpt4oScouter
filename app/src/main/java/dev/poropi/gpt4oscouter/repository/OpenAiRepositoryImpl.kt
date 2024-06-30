@@ -9,7 +9,27 @@ import dev.poropi.gpt4oscouter.service.web.response.ChatCompletionResponse
 import retrofit2.Response
 import javax.inject.Inject
 
+/**
+ * OpenAiRepositoryの実装クラス。
+ *
+ * このクラスは、OpenAiServiceを使用してOpenAI APIからデータを取得します。
+ * Hiltのアノテーションが付けられており、依存関係の注入を行います。
+ *
+ * @property service OpenAiServiceのインスタンス。
+ */
 class OpenAiRepositoryImpl @Inject constructor(private val service: OpenAiService): OpenAiRepository {
+
+    /**
+     * OpenAI APIからチャットの完了レスポンスを取得します。
+     *
+     * この関数は、指定されたbase64形式の画像を使用してOpenAI APIからチャットの完了レスポンスを非同期に取得します。
+     * リクエストは、"gpt-4o"モデルを使用し、システムメッセージとユーザーメッセージを含みます。
+     * システムメッセージは、画像から抽出する情報の指示を含みます。
+     * ユーザーメッセージは、base64形式の画像を含みます。
+     *
+     * @param base64Image チャットの完了レスポンスを取得するためのbase64形式の画像。
+     * @return チャットの完了レスポンスの結果。
+     */
     override suspend fun fetchChat(base64Image: String): Result<ChatCompletionResponse> {
         val request = ChatRequest(
             model = "gpt-4o",

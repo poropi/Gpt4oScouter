@@ -18,26 +18,22 @@ import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 /**
- * ViewModel for the MainScreen.
- * This ViewModel is responsible for fetching the battle point for a given image and updating the state variables accordingly.
- * @param repository The repository used to fetch the battle point.
- * @constructor Creates a new MainViewModel with the given repository.
+ * MainScreenのViewModel。
+ * このViewModelは、指定された画像のバトルポイントを取得し、それに応じて状態変数を更新する責任があります。
  *
- * @property repository The repository used to fetch the battle point.
- * @property bpState The state variable for the battle point.
- * @property nameState The state variable for the name of the character.
- * @property descState The state variable for the description of the character.
- * @property imageState The state variable for the image of the character.
- * @property enableCameraState The state variable for enabling/disabling the camera.
- * @property isLoading The state variable for loading state.
+ * @property repository バトルポイントを取得するために使用されるリポジトリ。
+ * @property bpState キャラクターのバトルポイントの状態変数。
+ * @property nameState キャラクターの名前の状態変数。
+ * @property descState キャラクターの説明の状態変数。
+ * @property imageState キャラクターの画像の状態変数。
+ * @property enableCameraState カメラの有効/無効の状態変数。
+ * @property isLoading ローディング状態の状態変数。
  *
+ * @constructor 指定されたリポジトリを使用して新しいMainViewModelを作成します。
  */
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repository: OpenAiRepository): ViewModel() {
 
-    /**
-     * State variables for the name, description, and battle point (bp) of the character.
-     */
     val bpState = mutableStateOf("0")
     val nameState = mutableStateOf("")
     val descState = mutableStateOf("")
@@ -48,13 +44,13 @@ class MainViewModel @Inject constructor(private val repository: OpenAiRepository
     val toneGenerator = ToneGenerator(AudioManager.STREAM_SYSTEM, ToneGenerator.MAX_VOLUME)
 
     /**
-     * Fetches the battle point for a given bitmap image.
+     * 指定されたビットマップ画像のバトルポイントを取得します。
      *
-     * This function takes a bitmap image, converts it to a base64 string, and sends it to the repository to fetch the chat.
-     * The response from the repository is then parsed to extract the name, job, race, battle point (bp), and description.
-     * These values are then used to update the corresponding state variables.
+     * この関数はビットマップ画像を取り、それをbase64文字列に変換し、チャットを取得するためにリポジトリに送信します。
+     * リポジトリからの応答は解析され、名前、職業、種族、バトルポイント（bp）、説明を抽出します。
+     * これらの値は、対応する状態変数を更新するために使用されます。
      *
-     * @param bitmap The bitmap image for which the battle point is to be fetched.
+     * @param bitmap バトルポイントを取得するためのビットマップ画像。
      */
     fun fetchBattlePoint(bitmap: Bitmap) {
         imageState.value = bitmap
@@ -93,12 +89,12 @@ class MainViewModel @Inject constructor(private val repository: OpenAiRepository
     }
 
     /**
-     * Encodes a bitmap image to a base64 string.
+     * ビットマップ画像をbase64文字列にエンコードします。
      *
-     * This function takes a bitmap image and converts it to a base64 string.
+     * この関数はビットマップ画像を取り、それをbase64文字列に変換します。
      *
-     * @param bitmap The bitmap image to be encoded.
-     * @return The base64 string representation of the bitmap image.
+     * @param bitmap エンコードするビットマップ画像。
+     * @return ビットマップ画像のbase64文字列表現。
      */
     private fun encodeImageToBase64(bitmap: Bitmap): Result<String> {
         return runCatching {

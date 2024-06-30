@@ -1,6 +1,5 @@
 package dev.poropi.gpt4oscouter.screens.main
 
-import android.media.AudioManager
 import android.media.ToneGenerator
 import androidx.annotation.OptIn
 import androidx.camera.core.CameraSelector
@@ -49,15 +48,14 @@ import dev.poropi.gpt4oscouter.service.web.response.Usage
 import dev.poropi.gpt4oscouter.ui.theme.Gpt4oScouterTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 /**
- * Main screen composable.
+ * MainScreenのコンポーザブル関数。
  *
- * This composable is responsible for displaying the main screen of the application.
- * It contains the camera preview, the image capture logic, and the UI elements for displaying the battle point, name, and description of the character.
+ * このコンポーザブルは、アプリケーションのメイン画面を表示する責任があります。
+ * カメラプレビュー、画像キャプチャロジック、キャラクターのバトルポイント、名前、説明を表示するためのUI要素を含みます。
  *
- * @param viewModel The MainViewModel used to manage the state of the main screen.
+ * @param viewModel メイン画面の状態を管理するためのMainViewModel。デフォルトではhiltViewModel()が使用されます。
  */
 @OptIn(ExperimentalGetImage::class)
 @Composable

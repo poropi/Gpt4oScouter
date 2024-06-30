@@ -1,6 +1,5 @@
 package dev.poropi.gpt4oscouter
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,8 +18,9 @@ import dev.poropi.gpt4oscouter.screens.main.MainScreen
 import dev.poropi.gpt4oscouter.ui.theme.Gpt4oScouterTheme
 
 /**
- * The main activity of the application.
- * This activity is responsible for setting up the edge-to-edge display and displaying the main screen of the application.
+ * アプリケーションのメインアクティビティ。
+ *
+ * このアクティビティは、エッジツーエッジディスプレイの設定とアプリケーションのメイン画面の表示を担当します。
  */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -33,6 +33,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * MyAppScreenのコンポーザブル関数。
+ *
+ * このコンポーザブルは、アプリケーションのメイン画面を表示する責任があります。
+ * ナビゲーションコントローラーとナビゲーションホストを設定します。
+ */
 @Composable
 fun MyAppScreen() {
     val navController = rememberNavController()
@@ -52,10 +58,20 @@ fun MyAppScreen() {
     }
 }
 
+/**
+ * ルートの列挙型。
+ *
+ * この列挙型は、アプリケーションの各ルートを定義します。
+ */
 enum class Route {
     MAIN
 }
 
+/**
+ * GreetingPreviewのコンポーザブル関数。
+ *
+ * このコンポーザブルは、プレビュー用のメイン画面を表示します。
+ */
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {

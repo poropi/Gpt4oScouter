@@ -11,12 +11,13 @@ import java.util.concurrent.Executor
 import kotlin.coroutines.resume
 
 /**
- * Extension function to take a picture using the ImageCapture use case.
+ * ImageCaptureの拡張関数。
  *
- * This function suspends until the picture is taken and returns the ImageProxy.
+ * この関数は、ImageCaptureユースケースを使用して写真を撮影します。
+ * この関数は、写真が撮影されるまで中断し、ImageProxyを返します。
  *
- * @param executor The executor to run the callback on.
- * @return The ImageProxy of the captured image.
+ * @param executor コールバックを実行するエグゼキュータ。
+ * @return 撮影した画像のImageProxy。
  */
 suspend fun ImageCapture.takePicture(executor: Executor): ImageProxy =
     suspendCancellableCoroutine { continuation ->
@@ -37,7 +38,7 @@ suspend fun ImageCapture.takePicture(executor: Executor): ImageProxy =
     }
 
 /**
- * Extension function to convert an ImageProxy to a rotated Bitmap.
+ * ImageProxyを回転したBitmapに変換する拡張関数。
  */
 fun ImageProxy.toRotationBitmap(): Bitmap {
     val planeProxy = this.planes[0]
