@@ -31,28 +31,6 @@ class MainActivity : ComponentActivity() {
             MyAppScreen()
         }
     }
-
-    /**
-     * This function solves the FizzBuzz problem.
-     *
-     * @param max The maximum number to which the FizzBuzz problem is solved.
-     * The function iterates from 1 to the maximum number (inclusive) and for each number:
-     * - If the number is divisible by both 3 and 5, it prints "FizzBuzz".
-     * - If the number is divisible by 3 (and not by 5), it prints "Fizz".
-     * - If the number is divisible by 5 (and not by 3), it prints "Buzz".
-     * - If the number is not divisible by either 3 or 5, it prints the number itself.
-     */
-    fun fizzBuzz(max: Int) {
-        for (i in 1..max) {
-            when {
-                i % 15 == 0 -> println("FizzBuzz")
-                i % 3 == 0 -> println("Fizz")
-                i % 5 == 0 -> println("Buzz")
-                else -> println(i)
-            }
-        }
-    }
-
 }
 
 @Composable
