@@ -1,5 +1,8 @@
+@file:kotlin.OptIn(ExperimentalPermissionsApi::class)
+
 package dev.poropi.gpt4oscouter.screens.main
 
+import android.Manifest
 import android.media.ToneGenerator
 import androidx.annotation.OptIn
 import androidx.camera.core.CameraSelector
@@ -13,6 +16,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +42,10 @@ import com.github.tbsten.cameraxcompose.usecasehelper.imageAnalysisUseCase
 import com.github.tbsten.cameraxcompose.usecasehelper.imageCaptureUseCase
 import com.github.tbsten.cameraxcompose.usecasehelper.previewUseCase
 import com.github.tbsten.cameraxcompose.usecasehelper.videoCaptureUseCase
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import dev.poropi.gpt4oscouter.extensions.takePicture
 import dev.poropi.gpt4oscouter.extensions.toRotationBitmap
 import dev.poropi.gpt4oscouter.repository.OpenAiRepository
@@ -81,89 +89,107 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
         }
     }
 
+    val permissionState: PermissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-        ) {
-        CameraPreview(
-            onBind = {
-                // ユースケース
-                val preview = previewUseCase()
-                val analysis = imageAnalysisUseCase(executor) {}
-                imageCapture = imageCaptureUseCase()
-                val videoCapture = videoCaptureUseCase()
-                // ユースケースをbindします
-                cameraProvider.bindToLifecycle(
-                    lifecycleOwner,
-                    CameraSelector.DEFAULT_BACK_CAMERA,
-                    preview,
-                    analysis,
-                    imageCapture,
-                    videoCapture
-                )
-            },
-        )
-        image.value?.asImageBitmap()?.let {
-            Image(
-                bitmap = it,
-                contentDescription = "",
-                modifier = Modifier,
-                alignment = Alignment.Center,
-                contentScale = ContentScale.Crop
-            )
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    color = Color(0, 255, 0, 125)
-                )
-                .clickable {
-                    if (!enableCamera.value) {
-                        enableCamera.value = true
-                        image.value = null
-                        bp.value = "0"
-                        name.value = ""
-                        desc.value = ""
-                    } else {
-                        enableCamera.value = false
-                        scope.launch {
-                            val bitmap = imageCapture
-                                ?.takePicture(executor)
-                                ?.toRotationBitmap() ?: return@launch
-                            viewModel.fetchBattlePoint(bitmap)
-                        }
-                    }
-                },
-            contentAlignment = Alignment.Center
-        ){
-            Column(
-                modifier = Modifier,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+    ) {
+        if(permissionState.status.isGranted){
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
             ) {
-                Text(
-                    text = "POWER",
-                    fontSize = 30.sp,
-                    color = Color.Yellow,
+                CameraPreview(
+                    onBind = {
+                        // ユースケース
+                        val preview = previewUseCase()
+                        val analysis = imageAnalysisUseCase(executor) {}
+                        imageCapture = imageCaptureUseCase()
+                        val videoCapture = videoCaptureUseCase()
+                        // ユースケースをbindします
+                        cameraProvider.bindToLifecycle(
+                            lifecycleOwner,
+                            CameraSelector.DEFAULT_BACK_CAMERA,
+                            preview,
+                            analysis,
+                            imageCapture,
+                            videoCapture
+                        )
+                    },
                 )
-                Text(
-                    text = bp.value,
-                    fontSize = 30.sp,
-                    color = Color.Yellow,
-                    modifier = Modifier.padding(bottom = 20.dp)
-                )
-                Text(
-                    text = name.value,
-                    fontSize = 30.sp,
-                    color = Color.Yellow,
-                    modifier = Modifier.padding(bottom = 20.dp)
-                )
-                Text(
-                    text = desc.value,
-                    fontSize = 24.sp,
-                    color = Color.Yellow
-                )
+                image.value?.asImageBitmap()?.let {
+                    Image(
+                        bitmap = it,
+                        contentDescription = "",
+                        modifier = Modifier,
+                        alignment = Alignment.Center,
+                        contentScale = ContentScale.Crop
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            color = Color(0, 255, 0, 125)
+                        )
+                        .clickable {
+                            if (!enableCamera.value) {
+                                enableCamera.value = true
+                                image.value = null
+                                bp.value = "0"
+                                name.value = ""
+                                desc.value = ""
+                            } else {
+                                enableCamera.value = false
+                                scope.launch {
+                                    val bitmap = imageCapture
+                                        ?.takePicture(executor)
+                                        ?.toRotationBitmap() ?: return@launch
+                                    viewModel.fetchBattlePoint(bitmap)
+                                }
+                            }
+                        },
+                    contentAlignment = Alignment.Center
+                ){
+                    Column(
+                        modifier = Modifier,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "POWER",
+                            fontSize = 30.sp,
+                            color = Color.Yellow,
+                        )
+                        Text(
+                            text = bp.value,
+                            fontSize = 30.sp,
+                            color = Color.Yellow,
+                            modifier = Modifier.padding(bottom = 20.dp)
+                        )
+                        Text(
+                            text = name.value,
+                            fontSize = 30.sp,
+                            color = Color.Yellow,
+                            modifier = Modifier.padding(bottom = 20.dp)
+                        )
+                        Text(
+                            text = desc.value,
+                            fontSize = 24.sp,
+                            color = Color.Yellow
+                        )
+                    }
+                }
+            }
+        }else{
+            Column(modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center)
+            {
+                Button(onClick =  permissionState::launchPermissionRequest ) {
+                    Text(text = "カメラの許可を与えてください")
+                }
             }
         }
     }

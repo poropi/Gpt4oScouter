@@ -116,6 +116,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(libs.camerax.compose)
+
+    implementation(libs.accompanist.permissions)
 }
 
 kapt {

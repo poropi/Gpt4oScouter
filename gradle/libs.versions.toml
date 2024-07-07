@@ -1,6 +1,6 @@
 [versions]
 accompanistPermissions = "0.28.0"
-agp = "8.4.1"
+agp = "8.5.0"
 cameraxCompose = "0.0.2"
 cameraxVersion = "1.3.3"
 converterScalars = "2.9.0"
